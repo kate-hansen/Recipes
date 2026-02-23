@@ -12,11 +12,11 @@ services:
     command: sh -c "corepack enable && corepack prepare pnpm@latest --activate && pnpm install && pnpm dev"
     depends_on:
       - mongo
-      # - postgres
+      - mysql
     env_file:
       - .env
 
-  # Ensure your DATABASE_URL uses 'mongo' as the hostname ie. mongodb://mongo/my-db-name
+  # MongoDB for Payload CMS
   mongo:
     image: mongo:latest
     ports:
@@ -24,20 +24,25 @@ services:
     command:
       - --storageEngine=wiredTiger
     volumes:
-      - data:/data/db
+      - mongo_data:/data/db
     logging:
       driver: none
 
-  # Uncomment the following to use postgres
-  # postgres:
-  #   restart: always
-  #   image: postgres:latest
-  #   volumes:
-  #     - pgdata:/var/lib/postgresql/data
-  #   ports:
-  #     - "5432:5432"
+  # MySQL for Drizzle ORM
+  mysql:
+    image: mysql:8.0
+    ports:
+      - '3306:3306'
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: recipes
+      MYSQL_USER: recipes_user
+      MYSQL_PASSWORD: recipes_password
+    volumes:
+      - mysql_data:/var/lib/mysql
+    command: --default-authentication-plugin=mysql_native_password
 
 volumes:
-  data:
-  # pgdata:
+  mongo_data:
+  mysql_data:
   node_modules:

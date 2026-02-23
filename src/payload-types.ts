@@ -69,6 +69,8 @@ export interface Config {
   collections: {
     users: User;
     media: Media;
+    recipes: Recipe;
+    categories: Category;
     'payload-kv': PayloadKv;
     'payload-locked-documents': PayloadLockedDocument;
     'payload-preferences': PayloadPreference;
@@ -78,6 +80,8 @@ export interface Config {
   collectionsSelect: {
     users: UsersSelect<false> | UsersSelect<true>;
     media: MediaSelect<false> | MediaSelect<true>;
+    recipes: RecipesSelect<false> | RecipesSelect<true>;
+    categories: CategoriesSelect<false> | CategoriesSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
     'payload-preferences': PayloadPreferencesSelect<false> | PayloadPreferencesSelect<true>;
@@ -160,6 +164,100 @@ export interface Media {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "recipes".
+ */
+export interface Recipe {
+  id: string;
+  title: string;
+  slug?: string | null;
+  /**
+   * Brief description of the recipe
+   */
+  description?: string | null;
+  /**
+   * List of ingredients with quantities
+   */
+  ingredients: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  };
+  /**
+   * Step-by-step cooking instructions
+   */
+  instructions: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  };
+  /**
+   * Preparation time in minutes
+   */
+  prepTime?: number | null;
+  /**
+   * Cooking time in minutes
+   */
+  cookTime?: number | null;
+  /**
+   * Number of servings
+   */
+  servings?: number | null;
+  difficulty?: ('easy' | 'medium' | 'hard') | null;
+  /**
+   * Recipe image
+   */
+  image?: (string | null) | Media;
+  /**
+   * Select recipe categories
+   */
+  categories?: (string | Category)[] | null;
+  /**
+   * Make this recipe publicly visible
+   */
+  published?: boolean | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "categories".
+ */
+export interface Category {
+  id: string;
+  name: string;
+  /**
+   * Brief description of the category
+   */
+  description?: string | null;
+  /**
+   * Color hex code for category display (e.g., #FF5733)
+   */
+  color?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-kv".
  */
 export interface PayloadKv {
@@ -189,6 +287,14 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'media';
         value: string | Media;
+      } | null)
+    | ({
+        relationTo: 'recipes';
+        value: string | Recipe;
+      } | null)
+    | ({
+        relationTo: 'categories';
+        value: string | Category;
       } | null);
   globalSlug?: string | null;
   user: {
@@ -271,6 +377,37 @@ export interface MediaSelect<T extends boolean = true> {
   height?: T;
   focalX?: T;
   focalY?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "recipes_select".
+ */
+export interface RecipesSelect<T extends boolean = true> {
+  title?: T;
+  slug?: T;
+  description?: T;
+  ingredients?: T;
+  instructions?: T;
+  prepTime?: T;
+  cookTime?: T;
+  servings?: T;
+  difficulty?: T;
+  image?: T;
+  categories?: T;
+  published?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "categories_select".
+ */
+export interface CategoriesSelect<T extends boolean = true> {
+  name?: T;
+  description?: T;
+  color?: T;
+  updatedAt?: T;
+  createdAt?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
