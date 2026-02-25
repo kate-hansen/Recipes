@@ -70,7 +70,7 @@ export interface Config {
     users: User;
     media: Media;
     recipes: Recipe;
-    categories: Category;
+    collection: Collection;
     'payload-kv': PayloadKv;
     'payload-locked-documents': PayloadLockedDocument;
     'payload-preferences': PayloadPreference;
@@ -81,7 +81,7 @@ export interface Config {
     users: UsersSelect<false> | UsersSelect<true>;
     media: MediaSelect<false> | MediaSelect<true>;
     recipes: RecipesSelect<false> | RecipesSelect<true>;
-    categories: CategoriesSelect<false> | CategoriesSelect<true>;
+    collection: CollectionSelect<false> | CollectionSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
     'payload-preferences': PayloadPreferencesSelect<false> | PayloadPreferencesSelect<true>;
@@ -175,41 +175,79 @@ export interface Recipe {
    */
   description?: string | null;
   /**
-   * List of ingredients with quantities
+   * List of ingredients with quantities and measurements
    */
-  ingredients: {
-    root: {
-      type: string;
-      children: {
-        type: any;
-        version: number;
-        [k: string]: unknown;
-      }[];
-      direction: ('ltr' | 'rtl') | null;
-      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
-      indent: number;
-      version: number;
-    };
-    [k: string]: unknown;
-  };
+  ingredients?:
+    | {
+        /**
+         * Amount (e.g., 2, 1.5, 0.75)
+         */
+        quantity: number;
+        measurement:
+          | 'as needed'
+          | 'dash'
+          | 'drop'
+          | 'fl oz'
+          | 'gal'
+          | 'g'
+          | 'kg'
+          | 'l'
+          | 'mg'
+          | 'ml'
+          | 'oz'
+          | 'pinch'
+          | 'pt'
+          | 'lb'
+          | 'qt'
+          | 'smidgen'
+          | 'tbsp'
+          | 'tsp'
+          | 'to taste'
+          | 'whole'
+          | 'large'
+          | 'medium'
+          | 'small';
+        /**
+         * Ingredient name (e.g., flour, onions, chicken breast)
+         */
+        ingredient: string;
+        /**
+         * Optional notes (e.g., diced, minced, at room temperature)
+         */
+        notes?: string | null;
+        id?: string | null;
+      }[]
+    | null;
   /**
    * Step-by-step cooking instructions
    */
-  instructions: {
-    root: {
-      type: string;
-      children: {
-        type: any;
-        version: number;
-        [k: string]: unknown;
-      }[];
-      direction: ('ltr' | 'rtl') | null;
-      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
-      indent: number;
-      version: number;
-    };
-    [k: string]: unknown;
-  };
+  instructions?:
+    | {
+        /**
+         * Step number (auto-ordered)
+         */
+        stepNumber: number;
+        /**
+         * Step-by-step instruction
+         */
+        instruction: {
+          root: {
+            type: string;
+            children: {
+              type: any;
+              version: number;
+              [k: string]: unknown;
+            }[];
+            direction: ('ltr' | 'rtl') | null;
+            format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+            indent: number;
+            version: number;
+          };
+          [k: string]: unknown;
+        };
+        id?: string | null;
+      }[]
+    | null;
   /**
    * Preparation time in minutes
    */
@@ -222,15 +260,79 @@ export interface Recipe {
    * Number of servings
    */
   servings?: number | null;
+  /**
+   * Type of dish
+   */
+  dishType?:
+    | (
+        | 'appetizer'
+        | 'beverage'
+        | 'bread'
+        | 'breakfast'
+        | 'condiment'
+        | 'dessert'
+        | 'dinner'
+        | 'lunch'
+        | 'main-course'
+        | 'marinade'
+        | 'pasta'
+        | 'pizza'
+        | 'salad'
+        | 'sandwich'
+        | 'sauce'
+        | 'side-dish'
+        | 'snack'
+        | 'soup'
+      )
+    | null;
+  /**
+   * Primary cooking method used
+   */
+  cookingMethod?:
+    | (
+        | 'air-fryer'
+        | 'deep-fryer'
+        | 'dutch-oven'
+        | 'grill'
+        | 'instant-pot'
+        | 'microwave'
+        | 'no-cook'
+        | 'oven'
+        | 'pressure-cooker'
+        | 'slow-cooker'
+        | 'smoker'
+        | 'sous-vide'
+        | 'stovetop'
+        | 'toaster-oven'
+      )
+    | null;
+  /**
+   * Dietary restrictions or preferences (select all that apply)
+   */
+  dietTypes?:
+    | (
+        | 'dairy-free'
+        | 'egg-free'
+        | 'flexitarian'
+        | 'gluten-free'
+        | 'keto'
+        | 'low-carb'
+        | 'mediterranean'
+        | 'nut-free'
+        | 'paleo'
+        | 'pescatarian'
+        | 'raw'
+        | 'soy-free'
+        | 'vegan'
+        | 'vegetarian'
+        | 'whole30'
+      )[]
+    | null;
   difficulty?: ('easy' | 'medium' | 'hard') | null;
   /**
    * Recipe image
    */
   image?: (string | null) | Media;
-  /**
-   * Select recipe categories
-   */
-  categories?: (string | Category)[] | null;
   /**
    * Make this recipe publicly visible
    */
@@ -240,19 +342,22 @@ export interface Recipe {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "categories".
+ * via the `definition` "collection".
  */
-export interface Category {
+export interface Collection {
   id: string;
+  /**
+   * Name of your recipe collection (e.g., "Weeknight Recipes")
+   */
   name: string;
   /**
-   * Brief description of the category
+   * Brief description of this collection
    */
   description?: string | null;
   /**
-   * Color hex code for category display (e.g., #FF5733)
+   * Add recipes to this collection
    */
-  color?: string | null;
+  recipes?: (string | Recipe)[] | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -293,8 +398,8 @@ export interface PayloadLockedDocument {
         value: string | Recipe;
       } | null)
     | ({
-        relationTo: 'categories';
-        value: string | Category;
+        relationTo: 'collection';
+        value: string | Collection;
       } | null);
   globalSlug?: string | null;
   user: {
@@ -386,26 +491,42 @@ export interface RecipesSelect<T extends boolean = true> {
   title?: T;
   slug?: T;
   description?: T;
-  ingredients?: T;
-  instructions?: T;
+  ingredients?:
+    | T
+    | {
+        quantity?: T;
+        measurement?: T;
+        ingredient?: T;
+        notes?: T;
+        id?: T;
+      };
+  instructions?:
+    | T
+    | {
+        stepNumber?: T;
+        instruction?: T;
+        id?: T;
+      };
   prepTime?: T;
   cookTime?: T;
   servings?: T;
+  dishType?: T;
+  cookingMethod?: T;
+  dietTypes?: T;
   difficulty?: T;
   image?: T;
-  categories?: T;
   published?: T;
   updatedAt?: T;
   createdAt?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "categories_select".
+ * via the `definition` "collection_select".
  */
-export interface CategoriesSelect<T extends boolean = true> {
+export interface CollectionSelect<T extends boolean = true> {
   name?: T;
   description?: T;
-  color?: T;
+  recipes?: T;
   updatedAt?: T;
   createdAt?: T;
 }
