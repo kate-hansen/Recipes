@@ -8,51 +8,30 @@ import config from '@/payload.config'
 import './styles.css'
 
 export default async function HomePage() {
-  const headers = await getHeaders()
-  const payloadConfig = await config
-  const payload = await getPayload({ config: payloadConfig })
-  const { user } = await payload.auth({ headers })
-
-  const fileURL = `vscode://file/${fileURLToPath(import.meta.url)}`
-
   return (
-    <div className="home">
-      <div className="content">
-        <picture>
-          <source srcSet="https://raw.githubusercontent.com/payloadcms/payload/main/packages/ui/src/assets/payload-favicon.svg" />
-          <Image
-            alt="Payload Logo"
-            height={65}
-            src="https://raw.githubusercontent.com/payloadcms/payload/main/packages/ui/src/assets/payload-favicon.svg"
-            width={65}
-          />
-        </picture>
-        {!user && <h1>Welcome to your new project.</h1>}
-        {user && <h1>Welcome back, {user.email}</h1>}
-        <div className="links">
-          <a
-            className="admin"
-            href={payloadConfig.routes.admin}
-            rel="noopener noreferrer"
-            target="_blank"
-          >
-            Go to admin panel
-          </a>
-          <a
-            className="docs"
-            href="https://payloadcms.com/docs"
-            rel="noopener noreferrer"
-            target="_blank"
-          >
-            Documentation
-          </a>
+    <div className="text-center py-12">
+      <h2 className="text-2xl font-semibold text-gray-800 mb-4">Your Recipe Collection</h2>
+      <p className="text-gray-600 mb-8">
+        Start building your recipe collection by adding your first recipe in the admin panel.
+      </p>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+          <h3 className="font-semibold text-gray-900 mb-2">📝 Add Recipes</h3>
+          <p className="text-sm text-gray-600">
+            Create detailed recipes with ingredients, instructions, and cooking times.
+          </p>
         </div>
-      </div>
-      <div className="footer">
-        <p>Update this page by editing</p>
-        <a className="codeLink" href={fileURL}>
-          <code>app/(frontend)/page.tsx</code>
-        </a>
+        <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+          <h3 className="font-semibold text-gray-900 mb-2">🏷️ Organize Collections</h3>
+          <p className="text-sm text-gray-600">Group recipes by meal type, cuisine, or occasion.</p>
+        </div>
+        <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+          <h3 className="font-semibold text-gray-900 mb-2">🔍 Filter & Search</h3>
+          <p className="text-sm text-gray-600">
+            Find recipes by diet, cooking method, or ingredients.
+          </p>
+        </div>
       </div>
     </div>
   )

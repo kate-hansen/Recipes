@@ -16,9 +16,6 @@
     "test": "pnpm run test:int && pnpm run test:e2e",
     "test:e2e": "cross-env NODE_OPTIONS=\"--no-deprecation --import=tsx/esm\" playwright test --config=playwright.config.ts",
     "test:int": "cross-env NODE_OPTIONS=--no-deprecation vitest run --config ./vitest.config.mts",
-    "db:generate": "drizzle-kit generate",
-    "db:migrate": "drizzle-kit migrate",
-    "db:studio": "drizzle-kit studio",
     "seed": "tsx src/scripts/seed.ts"
   },
   "dependencies": {
@@ -26,18 +23,22 @@
     "@payloadcms/next": "3.77.0",
     "@payloadcms/richtext-lexical": "3.77.0",
     "@payloadcms/ui": "3.77.0",
+    "@radix-ui/react-slot": "^1.2.4",
     "@types/mysql": "^2.15.27",
+    "class-variance-authority": "^0.7.1",
+    "clsx": "^2.1.1",
     "cross-env": "^7.0.3",
     "dotenv": "16.4.7",
-    "drizzle-kit": "^0.31.9",
-    "drizzle-orm": "^0.45.1",
     "graphql": "^16.8.1",
+    "lucide-react": "^0.575.0",
     "mysql2": "^3.18.0",
     "next": "15.4.11",
     "payload": "3.77.0",
     "react": "19.2.1",
     "react-dom": "19.2.1",
-    "sharp": "0.34.2"
+    "sharp": "0.34.2",
+    "tailwind-merge": "^3.5.0",
+    "tailwindcss-animate": "^1.0.7"
   },
   "devDependencies": {
     "@playwright/test": "1.58.2",
