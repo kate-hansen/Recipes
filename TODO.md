@@ -32,9 +32,8 @@
 
 ## Future Enhancements
 
-- [ ] Add meal planning feature
 - [ ] Implement recipe import/export - ai extension with google docs support
-- [ ] Add cooking mode (step-by-step timer)
 - [ ] Add recipe printing feature
-- [ ] Implement recipe sharing
+- [ ] Implement landing page / recipe sharing
 - [ ] Add recipe ratings/reviews
+- [ ] Add meal planning feature
