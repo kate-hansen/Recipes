@@ -11,6 +11,6 @@ RUN pnpm install --frozen-lockfile
 
 COPY . .
 
-EXPOSE 3001
+EXPOSE 3000
 
-CMD ["node", "--no-experimental-fetch", "--no-experimental-global-webcrypto", "node_modules/.bin/payload", "dev"]
+CMD ["pnpm", "dev"]

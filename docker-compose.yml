@@ -1,15 +1,15 @@
-version: '3'
+version: '3.8'
 
 services:
   payload:
-    image: node:18-alpine
+    build: .
     ports:
       - '3000:3000'
     volumes:
-      - .:/home/node/app
-      - node_modules:/home/node/app/node_modules
-    working_dir: /home/node/app/
-    command: sh -c "corepack enable && corepack prepare pnpm@latest --activate && pnpm install && pnpm dev"
+      - .:/usr/src/app
+      - node_modules:/usr/src/app/node_modules
+    working_dir: /usr/src/app/
+    command: sh -c "pnpm dev"
     depends_on:
       - mongo
       - mysql
